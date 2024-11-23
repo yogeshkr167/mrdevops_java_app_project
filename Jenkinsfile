@@ -50,12 +50,20 @@ pipeline{
             }
         }
 
-        stage('Quality gates Status'){
+        stage('Quality gates Status check'){
         when{ expression { params.action == 'create' } }
             steps{
                 script{
                     def SonarQubecredentialsId = 'sonar-api'
                     waitForQualityGate(SonarQubecredentialsId)
+                }
+            }
+        }
+        stage('Maven build'){
+        when{ expression { params.action == 'create' } }
+            steps{
+                script{
+                    mvnBuild()
                 }
             }
         }
