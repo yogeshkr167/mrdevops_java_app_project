@@ -6,13 +6,13 @@ pipeline{
 
     parameters{
 
-        choice(name: 'action', choice: 'create\ndelete', description: 'Choose cretae /Destroy')
+        choice(name: 'action', choices: 'create\ndelete', description: 'Choose create /Destroy')
     }
 
     stages{
 
-        when{ expression { param.action == 'create' } }
         stage('Git checkout'){
+        when{ expression { param.action == 'create' } }
             steps{
             gitCheckout(
                 branch: "main",
@@ -22,20 +22,30 @@ pipeline{
         }
 
         stage('Unit Test Maven'){
+        when{ expression { param.action == 'create' } }
+
             steps{
                 script{
                     mvnTest()
-                }
-            
+                }           
             }
         }
 
         stage('Maven Integration test'){
+        when{ expression { param.action == 'create' } }
             steps{
                 script{
                     mvnIntegrationTest()
                 }
-            
+            }
+        }
+
+        stage('Sonar'){
+        when{ expression { param.action == 'create' } }
+            steps{
+                script{
+                    statiCodeAnalysis()
+                }
             }
         }
 
