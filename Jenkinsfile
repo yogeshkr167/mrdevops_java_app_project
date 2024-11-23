@@ -40,11 +40,20 @@ pipeline{
             }
         }
 
-        stage('Sonar'){
+        stage('Sonar Scan'){
         when{ expression { params.action == 'create' } }
             steps{
                 script{
                     statiCodeAnalysis()
+                }
+            }
+        }
+
+        stage('Quality gates Status'){
+        when{ expression { params.action == 'create' } }
+            steps{
+                script{
+                    QualityGateStatus()
                 }
             }
         }
